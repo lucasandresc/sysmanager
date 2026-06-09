@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export BORDER TITLE SUCCESS WARNING DANGER DIM BOLD NC
+
 BORDER="\033[0;36m"
 TITLE="\033[1;36m"
 
@@ -13,10 +15,10 @@ NC="\033[0m"
 
 draw_box() {
   local title="$1"
-  local width=40
+  local width=${2:$COLUMNS}
 
   local line
-  line=$(printf "═%.0s" $(seq 1 $width))
+  line=$(printf "═%.0s" $(seq 1 "$width"))
 
   local pad_left=$(((width - ${#title}) / 2))
   local pad_right=$(((width - ${#title}) - pad_left))
