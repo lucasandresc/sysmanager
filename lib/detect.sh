@@ -31,7 +31,3 @@ check_init_system() {
   esac
 
 }
-
-check_distro
-check_package_manager
-check_init_system
