@@ -15,7 +15,10 @@ NC="\033[0m"
 
 draw_box() {
   local title="$1"
-  local width=${2:$COLUMNS}
+  local width=${2:-50}
+  local term_width=$(tput cols)
+  local margin=$(((term_width - width) / 2))
+  local pad=$(printf "%${margin}s" "")
 
   local line
   line=$(printf "═%.0s" $(seq 1 "$width"))
@@ -23,9 +26,9 @@ draw_box() {
   local pad_left=$(((width - ${#title}) / 2))
   local pad_right=$(((width - ${#title}) - pad_left))
 
-  printf "${BORDER}╔%s╗${NC}\n" "$line"
-  printf "${TITLE}${BOLD}║%${pad_left}s%s%${pad_right}s║${NC}\n" "" "$title" ""
-  printf "${BORDER}╚%s╝${NC}\n" "$line"
+  printf "%s${BORDER}╔%s╗${NC}\n" "$pad" "$line"
+  printf "%s${TITLE}${BOLD}║%${pad_left}s%s%${pad_right}s║${NC}\n" "$pad" "" "$title" ""
+  printf "%s${BORDER}╚%s╝${NC}\n" "$pad" "$line"
 }
 
 msg_success() { printf "${SUCCESS}[OK]${NC}   %s\n" "$1"; }
