@@ -2,6 +2,7 @@
 source ./lib/ui.sh
 source ./lib/detect.sh
 source ./lib/utils.sh
+source ./modules/packages.sh
 
 check_distro
 check_package_manager
@@ -18,8 +19,7 @@ show_main_menu() {
       case $option in
       "Package Management")
         clear
-        msg_info "Package Management - Coming Soon!"
-        pause
+        show_package_management
         break
         ;;
       "System Info")
