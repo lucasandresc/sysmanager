@@ -6,7 +6,7 @@ check_distro() {
 }
 
 check_package_manager() {
-  packages_manager=("paru" "yay" "pacman" "apt" "dnf" "zypper" "xbps-install" "apk" "emerge" "nix")
+  local packages_manager=("paru" "yay" "pacman" "apt" "dnf" "zypper" "xbps-install" "apk" "emerge" "nix")
   for manager in "${packages_manager[@]}"; do
     if command -v "$manager" &>/dev/null; then
       export PACKAGE_MANAGER="$manager"
