@@ -19,11 +19,6 @@ check_sudo() {
   if ! command -v sudo &>/dev/null; then
     return 1
   fi
-  if sudo -n true 2>/dev/null; then
-    return 0
-  else
-    return 1
-  fi
 }
 
 bytes_formatter() {
