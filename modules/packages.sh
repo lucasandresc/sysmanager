@@ -1,5 +1,63 @@
 #!/bin/bash
 
+get_sudo_cmd() {
+  if [ "$PACKAGE_MANAGER" == "pacman" ]; then
+    echo "sudo"
+  fi
+}
+
+update_system() {
+  check_sudo || return 1
+  confirm "Do you want to update the system?" || return 0
+  local sudo_cmd
+  sudo_cmd=$(get_sudo_cmd)
+
+  case $PACKAGE_MANAGER in
+  paru | yay | pacman)
+    # No quotes: if sudo_cmd is empty it must disappear, not stay as an empty argument.
+    if $sudo_cmd "$PACKAGE_MANAGER" -Syu; then
+      msg_success "Update process completed."
+    else
+      msg_error "Update failed."
+    fi
+    pause
+    ;;
+  *)
+    msg_error "Manager not supported or detected yet."
+    ;;
+  esac
+}
+
+remove_orphans() {
+  check_sudo || return 1
+  confirm "Do you want to remove orphans packages?" || return 0
+
+  local sudo_cmd
+  sudo_cmd=$(get_sudo_cmd)
+
+  case $PACKAGE_MANAGER in
+  paru | yay | pacman)
+    local orphans
+    orphans=$("$PACKAGE_MANAGER" -Qdtq)
+    if [[ -z "$orphans" ]]; then
+      msg_info "No orphan packages found."
+      pause
+      return 0
+    fi
+
+    if $sudo_cmd "$PACKAGE_MANAGER" -Rns $orphans; then
+      msg_success "Orphans packages process completed."
+    else
+      msg_error "Process failed."
+    fi
+    pause
+    ;;
+  *)
+    msg_error "Manager not supported or detected yet."
+    ;;
+  esac
+}
+
 show_package_management() {
   while true; do
     clear
@@ -16,8 +74,7 @@ show_package_management() {
         ;;
       "Remove Orphans")
         clear
-        msg_info "Remove Orphans - Coming Soon"
-        pause
+        remove_orphans
         break
         ;;
       "Check Updates")
@@ -38,28 +95,4 @@ show_package_management() {
       esac
     done
   done
-}
-
-update_system() {
-  check_sudo || return 1
-  confirm "Do you want to update the system?" || return 0
-  local sudo_cmd=""
-  if [ "$PACKAGE_MANAGER" == "pacman" ]; then
-    sudo_cmd="sudo"
-  fi
-
-  case $PACKAGE_MANAGER in
-  paru | yay | pacman)
-    # No quotes: if sudo_cmd is empty it must dissapear, not stay as an empty argument.
-    if $sudo_cmd "$PACKAGE_MANAGER" -Syu; then
-      msg_success "Update process completed."
-    else
-      msg_error "Update failed."
-    fi
-    pause
-    ;;
-  *)
-    msg_error "Manager not supported or detected yet."
-    ;;
-  esac
 }
