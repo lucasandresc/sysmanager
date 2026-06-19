@@ -58,6 +58,46 @@ remove_orphans() {
   esac
 }
 
+check_updates() {
+  case $PACKAGE_MANAGER in
+  pacman)
+    local updates exit_code
+    if command -v checkupdates &>/dev/null; then
+      updates=$(checkupdates)
+      exit_code=$?
+
+      if [[ "$exit_code" == 0 ]]; then
+        echo "$updates"
+        pause
+      elif [[ "$exit_code" == 2 ]]; then
+        msg_success "Up to date."
+        pause
+      else
+        msg_error "Process failed."
+        pause
+      fi
+    else
+      updates=$("$PACKAGE_MANAGER" -Qu)
+      if [[ -z "$updates" ]]; then
+        msg_success "System is up to date."
+        msg_info "Install pacman-contrib for fresher results."
+        pause
+        return 0
+      fi
+      echo "$updates"
+      pause
+    fi
+    ;;
+  paru | yay)
+    "$PACKAGE_MANAGER" -Qua
+    pause
+    ;;
+  *)
+    msg_error "Manager not supported or detected yet."
+    ;;
+  esac
+}
+
 show_package_management() {
   while true; do
     clear
@@ -79,8 +119,7 @@ show_package_management() {
         ;;
       "Check Updates")
         clear
-        msg_info "Check Updates - Coming Soon"
-        pause
+        check_updates
         break
         ;;
       "Back")
