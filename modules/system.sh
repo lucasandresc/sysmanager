@@ -10,3 +10,8 @@ show_ram() {
   printf "%-12s %s\n" "Used:" "$(bytes_formatter "$usage_ram")"
   printf "%-12s %s\n" "Available:" "$(bytes_formatter "$mem_available")"
 }
+
+show_disk() {
+  printf "%-12s %-8s %-8s %-8s %s\n" "Mount" "Size" "Used" "Avail" "Use%"
+  df -h | grep "^/dev/" | awk '{printf "%-12s %-8s %-8s %-8s %s\n", $6, $2, $3, $4, $5}'
+}
