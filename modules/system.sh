@@ -15,3 +15,13 @@ show_disk() {
   printf "%-12s %-8s %-8s %-8s %s\n" "Mount" "Size" "Used" "Avail" "Use%"
   df -h | grep "^/dev/" | awk '{printf "%-12s %-8s %-8s %-8s %s\n", $6, $2, $3, $4, $5}'
 }
+
+show_cpu() {
+  local model cores threads
+  model=$(grep -m1 "^model name" /proc/cpuinfo | cut -d: -f2 | xargs)
+  cores=$(grep -m1 "^cpu cores" /proc/cpuinfo | cut -d: -f2 | xargs)
+  threads=$(nproc)
+  printf "%-12s %s\n" "Model:" "$model"
+  printf "%-12s %s\n" "Cores:" "$cores"
+  printf "%-12s %s\n" "Threads:" "$threads"
+}
