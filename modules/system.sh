@@ -1,5 +1,19 @@
 #!/bin/bash
 
+print_section() {
+  local title info
+  title=$1
+  info=$2
+
+  echo ""
+  printf "${TITLE}%s${NC}\n" "$title"
+  printf "${DIM}%s${NC}\n" "================"
+  echo ""
+  "$info"
+  echo ""
+
+}
+
 show_ram() {
   local mem_total mem_available usage_ram
   mem_total=$(grep "^MemTotal:" /proc/meminfo | awk -v factor=1024 '{print $2 * factor}')
@@ -44,4 +58,12 @@ show_temp() {
     return 0
   fi
 
+}
+
+show_system_info() {
+  print_section "RAM Information" show_ram
+  print_section "Disk Information" show_disk
+  print_section "CPU Information" show_cpu
+  print_section "Temperature Information" show_temp
+  pause
 }

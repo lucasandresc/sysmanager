@@ -3,6 +3,7 @@ source ./lib/ui.sh
 source ./lib/detect.sh
 source ./lib/utils.sh
 source ./modules/packages.sh
+source ./modules/system.sh
 
 check_distro
 check_package_manager
@@ -24,8 +25,7 @@ show_main_menu() {
         ;;
       "System Info")
         clear
-        msg_info "System Info - Coming Soon!"
-        pause
+        show_system_info
         break
         ;;
       "Services")
