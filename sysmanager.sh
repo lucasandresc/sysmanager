@@ -1,9 +1,10 @@
 #!/bin/bash
-source ./lib/ui.sh
-source ./lib/detect.sh
-source ./lib/utils.sh
-source ./modules/packages.sh
-source ./modules/system.sh
+SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+source "$SCRIPT_DIR"/lib/ui.sh
+source "$SCRIPT_DIR"/lib/detect.sh
+source "$SCRIPT_DIR"/lib/utils.sh
+source "$SCRIPT_DIR"/modules/packages.sh
+source "$SCRIPT_DIR"/modules/system.sh
 
 check_distro
 check_package_manager
