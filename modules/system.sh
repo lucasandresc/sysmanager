@@ -25,3 +25,23 @@ show_cpu() {
   printf "%-12s %s\n" "Cores:" "$cores"
   printf "%-12s %s\n" "Threads:" "$threads"
 }
+
+show_temp() {
+  if ! command -v sensors &>/dev/null; then
+    msg_error "lm_sensors is not installed."
+    msg_info "Please install lm_sensors to run this section."
+    return 1
+  fi
+
+  local temp
+  temp=$(sensors | grep "^Tctl:" | awk '{print $2}')
+
+  if [[ -z "$temp" ]]; then
+    msg_warning "CPU temperature not available on this system."
+    return 1
+  else
+    printf "%-12s %s\n" "CPU Temp:" "$temp"
+    return 0
+  fi
+
+}
