@@ -27,10 +27,10 @@ bytes_formatter() {
   if [[ "$bytes" -lt 1024 ]]; then
     printf "%d B\n" "$bytes"
   elif [[ "$bytes" -lt 1048576 ]]; then
-    awk "BEGIN { printf \"%.2f KB\n\", $bytes / 1024 }"
+    awk -v bytes="$bytes" 'BEGIN { printf "%.2f KB\n", bytes / 1024 }'
   elif [[ "$bytes" -lt 1073741824 ]]; then
-    awk "BEGIN { printf \"%.2f MB\n\", $bytes / 1048576 }"
+    awk -v bytes="$bytes" 'BEGIN { printf "%.2f MB\n", bytes / 1048576 }'
   else
-    awk "BEGIN { printf \"%.2f GB\n\", $bytes / 1073741824 }"
+    awk -v bytes="$bytes" 'BEGIN { printf "%.2f GB\n", bytes / 1073741824 }'
   fi
 }
